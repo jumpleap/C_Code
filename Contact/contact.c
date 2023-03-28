@@ -4,18 +4,35 @@
 //初始化通讯录
 void InitContact(Contact* pc)
 {
+	pc->data = (PeoInfo*)malloc(sizeof(PeoInfo) * DEFAULT_MAX);
+	if (pc->data == NULL)
+	{
+		printf("%s\n", strerror(errno));
+		return;
+	}
 	pc->len = 0;
-	memset(pc->data, 0, sizeof(pc->data));
+	pc->capacity = DEFAULT_MAX;
+}
+
+void checkCapacity(Contact* pc)
+{
+	if (pc->len == pc->capacity)
+	{
+		PeoInfo* ptr = (PeoInfo*)realloc(pc->data, sizeof(PeoInfo) * (pc->capacity + DEFAULT_MAX));
+		if (ptr == NULL)
+		{
+			perror("开辟失败：");
+			return;
+		}
+		pc -> data = ptr;
+		pc->capacity = pc->capacity + DEFAULT_MAX;
+	}
 }
 
 //添加联系人
 void AddContact(Contact* pc)
 {
-	if (pc->len == MAX)
-	{
-		printf("通讯录已满，无法添加~\n");
-		return;
-	}
+	checkCapacity(pc);
 
 	//添加
 	printf("请输入联系人姓名：>");
@@ -150,4 +167,12 @@ void SortContact(Contact* pc)
 	qsort(pc->data, pc->len, sizeof(PeoInfo), cmp_by_name);
 	printf("排序后的情况如下：\n");
 	ShowContact(pc);
+}
+
+void freeCapacity(Contact* pc)
+{
+	free(pc->data);
+	pc->data = NULL;
+	pc->capacity = 0;
+	pc->len = 0;
 }

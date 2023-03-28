@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <string.h>
 
 #define MAX 100
@@ -8,6 +9,7 @@
 #define MAX_GENDER 5
 #define MAX_TELE 20
 #define MAX_ADDR 20
+#define DEFAULT_MAX 3
 
 enum opt
 {
@@ -31,8 +33,9 @@ typedef struct PeoInfo
 
 typedef struct Contact
 {
-	PeoInfo data[MAX];
+	PeoInfo *data;
 	int len;
+	int capacity;
 }Contact;
 
 
@@ -56,3 +59,6 @@ void ModifyContact(Contact* pc);
 
 //给联系人进行排序
 void SortContact(Contact* pc);
+
+//释放空间
+void freeCapacity(Contact* pc);

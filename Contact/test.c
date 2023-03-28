@@ -46,6 +46,7 @@ int main()
 				ShowContact(&con);
 				break;
 			case EXIT:
+				freeCapacity(&con);
 				printf("�˳�ͨѶ¼\n");
 				break;
 			default:
